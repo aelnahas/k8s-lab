@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echoserver
+  labels:
+    app: echoserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echoserver
+  template:
+    # Pod configuration within the deployment configuration
+    metadata:
+      labels:
+        # Pods get the label through the template blue print,
+        #  the label is matched by the selector
+        app: echoserver
+    spec:
+      terminationGracePeriodSeconds: 1 # set pod termination grace period to 60 s
+      containers:
+        # Container configuration wihtin pod configuration
+        - name: echoserver
+          image: aelnahas/echoserver:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  [
+                    "bin/sh",
+                    "-c",
+                    'echo "${date}: post start script start" >> poststart.txt; sleep 5; echo "${date}: post start script end" >> poststart.txt',
+                  ]
+            preStop:
+              exec:
+                command:
+                  [
+                    "bin/sh",
+                    "-c",
+                    'echo "${date}: pre end script start" >> poststart.txt; sleep 5; echo "${date}: pre end script end" >> poststart.txt',
+                  ]
