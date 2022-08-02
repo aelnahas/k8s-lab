@@ -12,17 +12,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var gracefulTimeout = 10 * time.Second
+var gracefulTimeout = time.Second * 10
+var shortLatency = time.Millisecond * 200
+var longLatency = time.Second * 20
 
 func fast(c *gin.Context) {
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(shortLatency)
 	c.JSON(http.StatusOK, gin.H{
 		"request": "fast",
 	})
 }
 
 func slow(c *gin.Context) {
-	time.Sleep(20 * time.Second)
+	time.Sleep(longLatency)
 	c.JSON(http.StatusOK, gin.H{
 		"request": "slow",
 	})
@@ -56,7 +58,7 @@ func main() {
 	}()
 
 	// Wait for interrupt signal to gracefully shutdown the server with
-	// a timeout of 30 seconds.
+	// a timeout of gracefulTimeout seconds.
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit

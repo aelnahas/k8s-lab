@@ -17,7 +17,7 @@ spec:
         #  the label is matched by the selector
         app: echoserver
     spec:
-      terminationGracePeriodSeconds: 1 # set pod termination grace period to 60 s
+      terminationGracePeriodSeconds: 60 # set pod termination grace period to 60 s
       containers:
         # Container configuration wihtin pod configuration
         - name: echoserver

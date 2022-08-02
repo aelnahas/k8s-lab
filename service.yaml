@@ -3,15 +3,10 @@ kind: Service
 metadata:
   name: echoserver-service
 spec:
-  type: LoadBalancer
-  clusterIP: 10.96.0.12
+  type: NodePort
   selector:
     app: echoserver
   ports:
     - protocol: TCP
-      port: 30000
+      port: 9000
       targetPort: 3000
-status:
-  loadBalancer:
-    ingress:
-      - ip: 192.0.2.127
